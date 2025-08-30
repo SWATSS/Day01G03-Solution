@@ -21,5 +21,7 @@ namespace Day01G03.Models
         // EF Core : Department Must Be managed by One Employee [Total]
         [InverseProperty(nameof(Employee.ManagedDepartment))]
         public Employee? Manager { get; set; } = null!;
+        [InverseProperty(nameof(Employee.EmpDempartment))]
+        public ICollection<Employee> Employees { get; set; } = new HashSet<Employee>();
     }
 }

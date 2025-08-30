@@ -23,15 +23,15 @@ namespace Day01G03.Configuration_Classes
                     .HasColumnName("Name")
                     .IsRequired();
 
-            builder.Property(D => D.DateOfCreation)
+            builder.Property(D => D.DateOfCreation);
                     //.HasDefaultValue(DateTime.Now);
-                    .HasComputedColumnSql("GetDate()");
+
 
             builder.HasOne(D => D.Manager)
                    .WithOne(E => E.ManagedDepartment)
                    .HasForeignKey<Department>(D => D.MngId)
                    .OnDelete(DeleteBehavior.NoAction)
-                   .IsRequired();
+                   .IsRequired(false);
         }
     }
 }

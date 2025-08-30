@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 namespace Day01G03.Models
 {
     // Model : POCO Class [Plain Old CLR Object] - Domain Entity
@@ -83,6 +84,11 @@ namespace Day01G03.Models
         [InverseProperty(nameof(Department.Manager))]
         public Department? ManagedDepartment { get; set; }
 
-        public Address EmpAddress { get; set; }
+        public Address EmpAddress { get; set; } = null!;
+
+        [ForeignKey(nameof(EmpDempartment))]
+        public int DepartmentId { get; set; }
+        [InverseProperty(nameof(Department.Employees))]
+        public Department EmpDempartment { get; set; } = null!;
     }
 }

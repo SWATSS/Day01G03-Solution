@@ -25,6 +25,10 @@ namespace Day01G03.Configuration_Classes
                    .OnDelete(DeleteBehavior.NoAction)
                    .IsRequired(true);
             builder.OwnsOne(E => E.EmpAddress, Address => Address.WithOwner());
+            builder.HasOne(E => E.EmpDempartment)
+                   .WithMany(D => D.Employees)
+                   .HasForeignKey(E => E.DepartmentId)
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

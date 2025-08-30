@@ -1,4 +1,5 @@
 ﻿using Day01G03.Contexts;
+using Day01G03.DataSeeding;
 using Day01G03.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -129,6 +130,76 @@ namespace Day01G03
             //} 
             #endregion
             #endregion
+
+            using CompanyDbContext context = new CompanyDbContext();
+            //Department Dept01 = new Department()
+            //{
+            //    Code = 101,
+            //    DateOfCreation = new DateOnly(2025, 05, 23),
+            //    DepartmentName = "HR"
+            //};
+            //context.Set<Department>().Add(Dept01);
+            //context.SaveChanges();
+
+            //List<Department> departments = new List<Department>()
+            //{
+            //    new Department() {Code = 102, DateOfCreation = new DateOnly(2021, 05, 06), DepartmentName = "Sales"},
+            //    new Department() {Code = 103, DateOfCreation = new DateOnly(2023, 12, 3), DepartmentName = "Software"},
+            //    new Department() {Code = 104, DateOfCreation = new DateOnly(2024, 5, 1), DepartmentName = "Marketing"}
+            //};
+            //context.Set<Department>().AddRange(departments);
+            //context.SaveChanges();
+
+            CompanyDbContextSeed.DataSeeding(context);
+            #region Eagr
+
+            //var Emp01 = context.Employees.Include(E => E.EmpDempartment)
+            //                               .ThenInclude(D => D.Manager)
+            //                               .FirstOrDefault(E => E.Id == 3);
+
+            //if (Emp01 != null)
+            //{
+            //    Console.WriteLine($"Employee Name: {Emp01.Name}");
+            //    Console.WriteLine($"Department Id: {Emp01.DepartmentId}");
+            //    Console.WriteLine($"Department Name: {Emp01.EmpDempartment.DepartmentName}");
+            //    Console.WriteLine($"Manager Id: {Emp01.EmpDempartment.MngId}");
+            //    Console.WriteLine($"Manager Name: {Emp01.EmpDempartment.Manager.Name}");
+            //} 
+            #endregion
+
+            #region Explicit
+            #region Example
+            //var Emp01 = context.Employees.FirstOrDefault(E => E.Id == 1);
+
+            //if (Emp01 is not null)
+            //{
+
+            //    Console.WriteLine($"Employee Name: {Emp01.Name}");
+            //    Console.WriteLine($"Department Id: {Emp01.DepartmentId}");
+
+            //    context.Entry(Emp01).Reference(E => E.EmpDempartment).Load();
+            //    Console.WriteLine($"Department Name: {Emp01.EmpDempartment.DepartmentName}");
+            //} 
+            #endregion
+            #region Example
+            //var Dept = context.Set<Department>().FirstOrDefault(D => D.DeptId == 3);
+
+            //if (Dept != null)
+            //{
+            //    Console.WriteLine($"Department Name:{Dept.DepartmentName}");
+            //    context.Entry(Dept).Collection(D => D.Employees).Load();
+            //    foreach (var emp in Dept.Employees)
+            //    {
+
+            //        Console.WriteLine($"----------------------{emp.Name}");
+            //    }
+            //} 
+            #endregion 
+            #endregion
+
+
+
+
         }
     }
 }

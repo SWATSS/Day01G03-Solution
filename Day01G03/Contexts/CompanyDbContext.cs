@@ -14,7 +14,9 @@ namespace Day01G03.Contexts
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             //base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseSqlServer("Server = .; Database = CompanyG01; Trusted_Connection = True; TrustServerCertificate = True");
+            optionsBuilder.UseSqlServer("Server = .; Database = CompanyG01; Trusted_Connection = True; TrustServerCertificate = True")
+                          .UseLazyLoadingProxies();
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -80,13 +82,32 @@ namespace Day01G03.Contexts
             //            .UseIdentityColumn(1, 2);
             //});
 
+            //modelBuilder.Entity<Student>()
+            //            .HasMany(S => S.Courses)
+            //            .WithMany(C => C.Students)
+            //            .UsingEntity(SC => SC.ToTable("Hamada"));
 
 
+            modelBuilder.Entity<Student>()
+                        .HasMany(S => S.Courses)
+                        .WithOne(SC => SC.Student)
+                        .HasForeignKey(SC => SC.StdId)
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+            modelBuilder.Entity<Course>()
+            .HasMany(C => C.Students)
+            .WithOne(SC => SC.Course)
+            .HasForeignKey(SC => SC.CrsId)
+            .OnDelete(DeleteBehavior.NoAction)
+            .IsRequired();
         }
 
         public DbSet<Employee> Employees { get; set; }
-        //public DbSet<Department> Departments { get; set; }
+        public DbSet<Department> Departments { get; set; }
         public DbSet<Product> Products { get; set; }
         //public DbSet<Project> Projects { get; set; }
+        public DbSet<Student> Students { get; set; }
+        public DbSet<Course> Courses { get; set; }
     }
 }

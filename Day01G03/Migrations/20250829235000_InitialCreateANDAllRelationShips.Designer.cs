@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Day01G03.Migrations
 {
     [DbContext(typeof(CompanyDbContext))]
-    [Migration("20250828131503_OneToOneMMRealationShip")]
-    partial class OneToOneMMRealationShip
+    [Migration("20250829235000_InitialCreateANDAllRelationShips")]
+    partial class InitialCreateANDAllRelationShips
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,23 @@ namespace Day01G03.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Day01G03.Models.Course", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Courses");
+                });
 
             modelBuilder.Entity("Day01G03.Models.Department", b =>
                 {
@@ -69,6 +86,9 @@ namespace Day01G03.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("int");
 
+                    b.Property<int>("DepartmentId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -78,6 +98,8 @@ namespace Day01G03.Migrations
                         .HasDefaultValue(4000m);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
 
                     b.ToTable("Employees", "dbo");
                 });
@@ -99,6 +121,41 @@ namespace Day01G03.Migrations
                     b.ToTable("Products");
                 });
 
+            modelBuilder.Entity("Day01G03.Models.Student", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Age")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Students");
+                });
+
+            modelBuilder.Entity("Day01G03.Models.StudentCourse", b =>
+                {
+                    b.Property<int>("StdId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CrsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("StdId", "CrsId");
+
+                    b.HasIndex("CrsId");
+
+                    b.ToTable("StudentCourse");
+                });
+
             modelBuilder.Entity("Day01G03.Models.Department", b =>
                 {
                     b.HasOne("Day01G03.Models.Employee", "Manager")
@@ -112,6 +169,12 @@ namespace Day01G03.Migrations
 
             modelBuilder.Entity("Day01G03.Models.Employee", b =>
                 {
+                    b.HasOne("Day01G03.Models.Department", "EmpDempartment")
+                        .WithMany("Employees")
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.OwnsOne("Day01G03.Models.Address", "EmpAddress", b1 =>
                         {
                             b1.Property<int>("EmployeeId")
@@ -136,11 +199,47 @@ namespace Day01G03.Migrations
 
                     b.Navigation("EmpAddress")
                         .IsRequired();
+
+                    b.Navigation("EmpDempartment");
+                });
+
+            modelBuilder.Entity("Day01G03.Models.StudentCourse", b =>
+                {
+                    b.HasOne("Day01G03.Models.Course", "Course")
+                        .WithMany("Students")
+                        .HasForeignKey("CrsId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Day01G03.Models.Student", "Student")
+                        .WithMany("Courses")
+                        .HasForeignKey("StdId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("Day01G03.Models.Course", b =>
+                {
+                    b.Navigation("Students");
+                });
+
+            modelBuilder.Entity("Day01G03.Models.Department", b =>
+                {
+                    b.Navigation("Employees");
                 });
 
             modelBuilder.Entity("Day01G03.Models.Employee", b =>
                 {
                     b.Navigation("ManagedDepartment");
+                });
+
+            modelBuilder.Entity("Day01G03.Models.Student", b =>
+                {
+                    b.Navigation("Courses");
                 });
 #pragma warning restore 612, 618
         }
