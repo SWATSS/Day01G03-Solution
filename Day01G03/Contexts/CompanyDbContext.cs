@@ -14,8 +14,8 @@ namespace Day01G03.Contexts
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             //base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseSqlServer("Server = .; Database = CompanyG01; Trusted_Connection = True; TrustServerCertificate = True")
-                          .UseLazyLoadingProxies();
+            optionsBuilder.UseSqlServer("Server = .; Database = CompanyG01; Trusted_Connection = True; TrustServerCertificate = True");
+                          //.UseLazyLoadingProxies();
 
         }
 
